@@ -8,7 +8,7 @@ def character_panel(c)
   # puts "[пас] #{@name_passive_pl} #{@lor_passive_pl}"
   # puts "[неб] #{@name_noncombat_pl} #{@lor_noncombat_pl}"
   puts "С Т А Т Ы:"
-  puts "strength - #{c.strength} constitution - #{c.constitution} dexterity - #{c.dexterity} perception - #{c.perception} intelligence - #{c.intelligence} charisma - #{c.charisma}"
+  puts "strength - #{c.strength}\nconstitution - #{c.constitution}\ndexterity - #{c.dexterity}\nperception - #{c.perception}\nintelligence - #{c.intelligence}\ncharisma - #{c.charisma}"
   puts "Х А Р А К Т Е Р И С Т И К И:"
   puts "HP #{c.hp}/#{c.max_hp} Реген #{c.regen_hp} Восстановление #{c.recovery_hp}"
   puts "MP #{c.sp}/#{c.max_sp} Реген #{c.regen_sp} Восстановление #{c.recovery_sp}"
@@ -16,10 +16,38 @@ def character_panel(c)
   # puts "Урон #{char.mindam}-#{char.maxdam} (базовый #{char.mindam}-#{char.maxdam} + #{@weapon} #{@mindam_weapon}-#{@maxdam_weapon})"
   # puts "Броня #{char.armor} (базовая #{char.armor} + #{@torso} #{@armor_torso} + #{@helmet} #{@armor_helmet} + #{@gloves} #{@armor_gloves} + #{@shield} #{@armor_shield})"
   # puts "Шанс блока #{} (#{@shield} #{@block_shield}) блокируемый урон #{100 - (100 / (1 + char.hp.to_f / 200)).to_i}%"
+  puts "С В О Б О Д Н Ы Е  С Т А Т Ы:"
   puts "stat_points #{c.stat_points}"
   puts '--------------------------------------------------------------------------------------------'
   puts '--------------------------------------------------------------------------------------------'
 end
+
+# распределитель статов версия 1
+def stats_half_randomizer(char)
+  stats = [:strength, :constitution, :dexterity, :perception, :intelligence, :charisma]
+  until char.stat_points == 0
+    char.restart_influence_of_stats
+    character_panel(char)
+
+    res1, res2 = stats.sample, stats.sample
+    choode_stat = 0
+    begin
+      puts "выберите какой стат прибавить.\n#{res1} - нажмите 1; #{res2} - нажмите 2;"
+      choose_stat = gets.strip.to_i
+      if %w[1 2].include?(choose_stat.to_s)
+        puts "вы выбрали вариант #{choose_stat}"
+      else
+        puts "вы ввели неверный символ"
+      end
+    end until %w[1 2].include?(choose_stat.to_s)
+    res = [res1, res2][choose_stat - 1]
+
+    old = char.send(res) # 5
+    char.send("#{res}=", 1 + old) # 6
+    char.stat_points -= 1
+  end
+end
+#stats_half_randomizer(char)
 
 class Character
   attr_accessor :strength, :constitution, :dexterity, :perception, :intelligence, :charisma # первичные статы
@@ -75,15 +103,3 @@ class Character
 end
 
 char = Character.new
-
-# рандомилка статов
-until char.stat_points == 0
-  char.restart_influence_of_stats
-  character_panel(char)
-  gets
-  res = [:strength, :constitution, :dexterity, :perception, :intelligence, :charisma].sample
-  p res
-  old = char.send(res) # 5
-  char.send("#{res}=", 1 + old) # 6
-  char.stat_points -= 1
-end
