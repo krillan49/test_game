@@ -22,9 +22,29 @@ def character_panel(c)
   puts '--------------------------------------------------------------------------------------------'
 end
 
-# распределитель статов версия 1
+
+# рандомное автораспределение статов
+def stats_randomizer(char)
+  char.restart_influence_of_stats
+  character_panel(char)
+
+  stats = char.up_stats_chances
+  res = []
+  30.times{ res << stats.sample}
+  res.tally.each do |k,v|
+    old = char.send(k)
+    char.send("#{k}=", old + v)
+  end
+
+  char.restart_influence_of_stats
+  character_panel(char)
+end
+
+
+# полурандомный распределитель статов для ручнной прокачки
 def stats_half_randomizer(char)
-  stats = [:strength, :constitution, :dexterity, :perception, :intelligence, :charisma]
+  stats = char.up_stats_chances
+
   until char.stat_points == 0
     char.restart_influence_of_stats
     character_panel(char)
@@ -46,15 +66,18 @@ def stats_half_randomizer(char)
     char.send("#{res}=", 1 + old) # 6
     char.stat_points -= 1
   end
+
+  char.restart_influence_of_stats
+  character_panel(char)
 end
-#stats_half_randomizer(char)
+
 
 class Character
   attr_accessor :strength, :constitution, :dexterity, :perception, :intelligence, :charisma # первичные статы
   attr_accessor :stat_points, :skil_points, :exp, :lvl
   attr_accessor :max_hp, :regen_hp, :recovery_hp, :max_sp, :regen_sp, :recovery_sp, :initiative, :accuracy, :evasion, :max_weight, :skill_points_up # вторичные характеристики
   attr_accessor :hp, :sp # актуальные значения
-  attr_accessor :mindam, :maxdam, :armor, :exp_lvl
+  attr_accessor :mindam, :maxdam, :armor, :exp_lvl, :name
 
   def initialize
     @strength = 5 # сила
@@ -84,6 +107,10 @@ class Character
     @skill_points_up = @intelligence
   end
 
+  def up_stats_chances
+    [:strength, :constitution, :dexterity, :perception, :intelligence, :charisma]
+  end
+
   # ================== XZ =====================
   # def plus_damage(n)
   #   @mindam == @maxdam ? @maxdam += n : [@mindam, @maxdam][rand(1)] += n
@@ -102,4 +129,22 @@ class Character
   # end
 end
 
+class Orc < Character
+  def initialize
+    super
+    @strength = 7
+    @constitution = 7
+    @perception = 4
+    @intelligence = 3
+    @charisma = 4
+  end
+
+  def up_stats_chances
+    [:strength]*5 + [:constitution]*5 + [:dexterity]*3 + [:perception]*2 + [:intelligence] + [:charisma]*2
+  end
+end
+
+# char = Orc.new
 char = Character.new
+# stats_half_randomizer(char)
+stats_randomizer(char)
