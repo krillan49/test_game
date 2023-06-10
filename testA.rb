@@ -2,6 +2,7 @@ def character_panel(c)
   puts '--------------------------------------------------------------------------------------------'
   puts '--------------------------------------------------------------------------------------------'
   # puts c.name
+  puts "Раса #{c.race}"
   puts "Уровень #{c.lvl} (#{c.exp})"
   # puts "Н А В Ы К И:"
   # puts "[акт] #{@name_special_pl} #{@lor_special_pl}"
@@ -77,7 +78,8 @@ class Character
   attr_accessor :stat_points, :skil_points, :exp, :lvl
   attr_accessor :max_hp, :regen_hp, :recovery_hp, :max_sp, :regen_sp, :recovery_sp, :initiative, :accuracy, :evasion, :max_weight, :skill_points_up # вторичные характеристики
   attr_accessor :hp, :sp # актуальные значения
-  attr_accessor :mindam, :maxdam, :armor, :exp_lvl, :name
+  attr_accessor :mindam, :maxdam, :armor, :exp_lvl
+  attr_accessor :name, :race
 
   def initialize
     @strength = 5 # сила
@@ -123,20 +125,19 @@ class Character
   #   @points += new_lvl
   #   @skil_points += new_lvl
   # end
-  #
-  # def name_change(name)
-  #   @name = name
-  # end
+end
+
+class Human < Character
+  def initialize
+    super
+    @race = 'Human'
+  end
 end
 
 class Orc < Character
   def initialize
     super
-    @strength = 7
-    @constitution = 7
-    @perception = 4
-    @intelligence = 3
-    @charisma = 4
+    @race = 'Orc'
   end
 
   def up_stats_chances
@@ -144,7 +145,39 @@ class Orc < Character
   end
 end
 
-# char = Orc.new
-char = Character.new
+class Elf < Character
+  def initialize
+    super
+    @race = 'Elf'
+  end
+
+  def up_stats_chances
+    [:strength]*2 + [:constitution]*2 + [:dexterity]*4 + [:perception]*4 + [:intelligence]*3 + [:charisma]*3
+  end
+end
+
+class DarkElf < Character
+  def initialize
+    super
+    @race = 'Dark Elf'
+  end
+
+  def up_stats_chances
+    [:strength]*2 + [:constitution]*2 + [:dexterity]*3 + [:perception]*4 + [:intelligence]*4 + [:charisma]*3
+  end
+end
+
+class Dwarf < Character
+  def initialize
+    super
+    @race = 'Dwarf'
+  end
+
+  def up_stats_chances
+    [:strength]*3 + [:constitution]*5 + [:dexterity]*2 + [:perception]*2 + [:intelligence]*3 + [:charisma]*3
+  end
+end
+
+char = [Human.new, Orc.new, Elf.new, DarkElf.new, Dwarf.new][1]
 # stats_half_randomizer(char)
 stats_randomizer(char)
