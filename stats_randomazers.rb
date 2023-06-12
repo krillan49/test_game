@@ -2,12 +2,15 @@ module StatsRandomazers
 
   # рандомное автораспределение статов
   def stats_randomizer(char)
-    char.restart_influence_of_stats
-    Panels.character_panel(char)
+    # char.restart_influence_of_stats  # ----------------
+    # Panels.character_panel(char)  # ------------------
 
     stats = char.up_stats_chances
     res = []
-    30.times{ res << stats.sample}
+    until char.stat_points == 0
+      res << stats.sample
+      char.stat_points -= 1
+    end
     res.tally.each do |k,v|
       old = char.send(k)
       char.send("#{k}=", old + v)
@@ -47,5 +50,5 @@ module StatsRandomazers
     char.restart_influence_of_stats
     Panels.character_panel(char)
   end
-  
+
 end

@@ -9,14 +9,14 @@ module Characters
     attr_accessor :name, :race
 
     def initialize
-      @strength = 5 # сила
-      @constitution = 5 # телосложение
-      @dexterity = 5  # ловкость
-      @perception = 5 # восприятие
-      @intelligence = 5 # интеллект
-      @charisma = 5 # харизма
+      @strength = 1 # сила
+      @constitution = 1 # телосложение
+      @dexterity = 1  # ловкость
+      @perception = 1 # восприятие
+      @intelligence = 1 # интеллект
+      @charisma = 1 # харизма
 
-      @stat_points = 30
+      @stat_points = 54
       @skil_points = 0
       @exp = 0
       @lvl = 0
@@ -89,6 +89,18 @@ module Characters
 
     def up_stats_chances
       [:strength]*3 + [:constitution]*5 + [:dexterity]*2 + [:perception]*2 + [:intelligence]*3 + [:charisma]*3
+    end
+  end
+
+
+  class CharsParty
+    attr_accessor :size, :chars
+    def initialize(n)
+      @size = n
+      @chars = {}
+      1.upto(n) do |x|
+        @chars[:"char#{x}"] = [Human.new, Orc.new, Elf.new, DarkElf.new, Dwarf.new].sample
+      end
     end
   end
 
