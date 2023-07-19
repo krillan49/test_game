@@ -10,11 +10,22 @@ include Characters
 # stats_randomizer(char)
 
 
-# Распределение статов пати
-party = CharsParty.new(3)
-party.chars.each do |id, char|
-  p '='*40
-  p ' '*15 + "#{id}"
-  p '='*40
-  stats_randomizer(char)
+# party = CharsParty.new(3)
+# # Распределение статов пати
+# party.stats_randomaze_to_party # Characters
+
+class Weapon
+  attr_accessor :lvl, :random_min, :random_max
+  def initialize(lvl)
+    @lvl = lvl
+    @random_min = rand(0.5..1)
+    @random_max = rand(0.5..1)
+  end
+end
+
+class Mace
+  def damage(char)
+    min = char.strength * @random_min
+    max = char.strength * 2 * @random_max
+  end
 end

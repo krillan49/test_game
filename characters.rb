@@ -1,5 +1,26 @@
 module Characters
 
+  class CharsParty
+    attr_accessor :size, :chars
+
+    def initialize(n)
+      @size = n
+      @chars = {}
+      1.upto(n) do |x|
+        @chars[:"char#{x}"] = [Human.new, Orc.new, Elf.new, DarkElf.new, Dwarf.new].sample
+      end
+    end
+
+    def stats_randomaze_to_party
+      @chars.each do |id, char|
+        p '='*40
+        p ' '*15 + "#{id}"
+        p '='*40
+        StatsRandomazers.stats_randomizer(char)
+      end
+    end
+  end
+
   class Character
     attr_accessor :strength, :constitution, :dexterity, :perception, :intelligence, :charisma # первичные статы
     attr_accessor :stat_points, :skil_points, :exp, :lvl
@@ -9,14 +30,14 @@ module Characters
     attr_accessor :name, :race
 
     def initialize
-      @strength = 1 # сила
-      @constitution = 1 # телосложение
-      @dexterity = 1  # ловкость
-      @perception = 1 # восприятие
-      @intelligence = 1 # интеллект
-      @charisma = 1 # харизма
+      @strength = 3 # сила
+      @constitution = 3 # телосложение
+      @dexterity = 3  # ловкость
+      @perception = 3 # восприятие
+      @intelligence = 3 # интеллект
+      @charisma = 3 # харизма
 
-      @stat_points = 54
+      @stat_points = 42
       @skil_points = 0
       @exp = 0
       @lvl = 0
@@ -89,18 +110,6 @@ module Characters
 
     def up_stats_chances
       [:strength]*3 + [:constitution]*5 + [:dexterity]*2 + [:perception]*2 + [:intelligence]*3 + [:charisma]*3
-    end
-  end
-
-
-  class CharsParty
-    attr_accessor :size, :chars
-    def initialize(n)
-      @size = n
-      @chars = {}
-      1.upto(n) do |x|
-        @chars[:"char#{x}"] = [Human.new, Orc.new, Elf.new, DarkElf.new, Dwarf.new].sample
-      end
     end
   end
 
