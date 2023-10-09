@@ -25,7 +25,7 @@ stat_count = [:strength, :constitution, :dexterity, :perception, :intelligence, 
       # assert
       expect(char_stats_count).to eq stat_count
     end
-    
+
   end
 
 end
